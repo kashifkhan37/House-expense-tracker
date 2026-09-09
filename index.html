@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Expenses Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .form-container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; color: #555; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #message { text-align: center; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Add House Expense</h2>
+    <form id="expenseForm">
+        <label for="Month">Month</label>
+        <input type="month" id="Month" name="Month" required>
+
+        <label for="Category">Category</label>
+        <select id="Category" name="Category" required>
+            <option value="">Select Category</option>
+            <option value="Rent">Rent</option>
+            <option value="IESCO (Electricity)">IESCO (Electricity)</option>
+            <option value="Gas & Cylinder">Gas & Cylinder</option>
+            <option value="Internet">Internet</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Gas Fix">Gas Fix</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Guest Expense">Guest Expense</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="Amount">Amount (Rs)</label>
+        <input type="number" id="Amount" name="Amount" placeholder="e.g. 5000" required>
+
+        <label for="Notes">Notes (Optional)</label>
+        <input type="text" id="Notes" name="Notes" placeholder="Enter any details">
+
+        <button type="submit">Submit Expense</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby185ysAV7tBGOjpvg81BewR6mNtISyyR5zV28DAjxEOOvRovQrVP37zMHxkQOk5l9lyg/exec'; // Apnay Google Apps Script ka URL yahan lagayen
+    const form = document.getElementById('expenseForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        message.innerHTML = "Saving data...";
+        message.style.color = "blue";
+        
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                message.innerHTML = "Expense Added Successfully!";
+                message.style.color = "green";
+                form.reset();
+                setTimeout(() => message.innerHTML = "", 3000);
+            })
+            .catch(error => {
+                message.innerHTML = "Error saving data!";
+                message.style.color = "red";
+                console.error('Error!', error.message);
+            });
+    });
+</script>
+
+</body>
+</html>
